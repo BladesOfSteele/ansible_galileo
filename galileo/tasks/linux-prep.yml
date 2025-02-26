@@ -1,0 +1,14 @@
+---
+- name: Create Galileo Group
+  ansible.builtin.group:
+      name: galileo
+      state: present
+      gid: "{{ galileo_gid | default(omit) }}"
+
+- name: Create Galileo User
+  ansible.builtin.user:
+      name: galileo
+      uid: "{{ galileo_uid | default(omit) }}"
+      home: /opt/galileo
+      group: galileo
+      create_home: false

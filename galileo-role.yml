@@ -1,0 +1,11 @@
+---
+- name: Galileo agent install playbook
+  hosts: all
+  remote_user: root
+  gather_facts: true
+
+  vars_files:
+      - vars.yml
+
+  roles:
+      - galileo

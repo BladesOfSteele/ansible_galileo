@@ -1,0 +1,11 @@
+_gpe_svc={{galileo_service | default('Galileo_Xfer_Service')}}
+_gpe_url={{galileo_url | default('https://xfer1.galileosuite.com,https://xfer2.galileosuite.com')}}
+{% if (galileo_proxy is defined) and (galileo_proxy_port is defined) %}
+_gpe_proxy={{galileo_proxy}}:{{galileo_proxy_port}}
+{% endif %}
+{% if galileo_proxy_auth_required %}
+_gpe_proxy_credentials={{galileo_proxy_user}}:{{galileo_proxy_password}}
+{% endif %}
+_skip_confirm=y
+_gpe_svc_reg={{galileo_site | default('None')}}
+_token={{galileo_token | default('None')}}

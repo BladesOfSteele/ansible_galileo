@@ -1,0 +1,28 @@
+---
+- name: Galileo install for AIX
+  when: ansible_system | lower == 'aix'
+  block:
+    - name: Prep AIX OS to install Galileo
+      ansible.builtin.include_tasks:
+        file: tasks/aix-prep.yml
+
+    - name: Run AIX comm install playbook
+      ansible.builtin.include_tasks:
+        file: tasks/comm.yml
+
+    - name: Run AIX agent install playbook
+      ansible.builtin.include_tasks:
+        file: tasks/agent.yml
+
+- name: Galileo install for Linux
+  when: ansible_system | lower == 'linux'
+  block:
+    - name: Prep Linux OS to install Galileo
+      ansible.builtin.include_tasks:
+        file: tasks/linux-prep.yml
+
+    - name: Run comm and agent install playbook
+      ansible.builtin.include_tasks:
+        file: tasks/repo-comm.yml
+
+

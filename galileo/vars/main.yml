@@ -1,0 +1,33 @@
+---
+# vars file for galileo
+galileo_repo_setup: true
+galileo_repo_url: "https://my.galileosuite.com/downloads/yum/{{ansible_system|lower}}"
+galileo_use_gpgkey: true
+galileo_repo_gpgkey: "https://my.galileosuite.com/downloads/yum/KEY.gpg"
+galileo_agent_list: ["net-tools","gpe-agent-comm","gpe-agent-{{ansible_system|lower}}"]
+galileo_repo_dir: "/opt/freeware/etc/yum.repos.d"
+
+
+#######################
+## Comm Registration ##
+#######################
+# These are the possible variables when registering a system with comm
+# **** galileo_site & galileo_token are required variables
+#galileo_service: defaults to 'Galileo_Xfer_Service' if not defined
+#galileo_url: defaults to 'https://xfer1.galileosuite.com,https://xfer2.galileosuite.com' if not defined
+#galileo_proxy: optional
+#galileo_proxy_port: optional
+galileo_proxy_auth_required: false
+#galileo_proxy_user: optional
+#galileo_proxy_password: optional
+# galileo_site: DSS_BPIC
+# galileo_token: eyJzZWMiOiI0MTMzNzZmNjlhMjAzMmEzY2IxMTQ1MDhiZWZlNzlmYiIsInR5cCI6InJlZ2lzdGVyIiwia2V5IjoiNDkyMmJmYjg3MTBiNzhlNTc0Y2I1YzI0MTBkMjZkNTgifQ
+
+# These should only be used if you're going to specify a value, otherwise ansible
+# will omit these when creating and the rpm/system will handle getting a value
+# galileo_uid: 301
+# galileo_gid: 301
+
+# OS specfics
+aix_filesystem: /opt
+aix_filesystem_space: 1

@@ -1,0 +1,30 @@
+---
+- name: Create Galileo Group Linux
+  ansible.builtin.group:
+      name: galileo
+      state: present
+      gid: "{{ galileo_gid | default(omit) }}"
+
+- name: Create Galileo User Linux
+  ansible.builtin.user:
+      name: galileo
+      uid: "{{ galileo_uid | default(omit) }}"
+      home: /opt/galileo
+      group: galileo
+      create_home: false
+
+- name: Check if {{ aix_filesystem }} has at least {{ aix_filesystem_space }}GB of free space
+  register: var_free_space
+  ansible.builtin.shell:
+      cmd: |
+        set -o pipefail # <-- adding this will prevent surprises
+        df -g {{ aix_filesystem }} | awk 'NR==2 {print $3}'
+  changed_when: var_free_space.rc != 0
+  failed_when: var_free_space.rc != 0
+
+- name: Extend if needed {{ aix_filesystem }}, currently has {{ var_free_space.stdout }}GB, needs {{ aix_filesystem_space }}GBB
+  when: var_free_space.stdout | int < aix_filesystem_space
+  ibm.power_aix.filesystem:
+      filesystem: "{{ aix_filesystem }}"
+      state: present
+      attributes: "size=+{{ aix_filesystem_space | int - var_free_space.stdout | int }}G"

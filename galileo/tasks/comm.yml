@@ -1,0 +1,55 @@
+---
+- name: Download comm agent install file from Galileo
+  ansible.builtin.get_url:
+      url: https://my.galileosuite.com/downloads/{{ comm_package }}
+      dest: /tmp
+      mode: '0644'
+  connection: local
+  run_once: true
+
+- name: Copy file to remote server
+  ansible.builtin.copy:
+      src: "/tmp/{{ comm_package }}"
+      dest: /tmp
+      mode: '0644'
+
+- name: Check if RPM is already installed
+  ansible.builtin.shell:
+      cmd: "rpm  -q gpe-agent-comm"
+  changed_when: false
+  failed_when: false
+  register: rpm_is_installed
+
+- name: Install {{ comm_package }}
+  ansible.builtin.shell:
+      cmd: "rpm -Uvh /tmp/{{ comm_package }}"
+  when: rpm_is_installed.rc != 0
+
+- name: Enable proxy Auth if user and password were provided
+  ansible.builtin.set_fact:
+      galileo_proxy_auth_required: "{% if galileo_proxy_user is defined and galileo_proxy_password is defined %}true{% endif %}"
+  when: galileo_proxy is defined and galileo_proxy_port is defined
+
+- name: Lay down galileo answer file
+  ansible.builtin.template:
+      dest: /tmp/galileo_comm_answer_file.txt
+      src: galileo_comm_answer_file.txt.j2
+
+- name: Remove existing registration
+  ansible.builtin.shell:
+      cmd: "echo y | /opt/galileo/bin/gpe-agent-comm del_service Galileo_Xfer_Service"
+
+- name: Register newly installed agent with galileo
+  ansible.builtin.shell:
+      cmd: "/opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt"
+  register: comm_registration
+
+- name: Validate registration succeeded by attempting a send
+  ansible.builtin.shell:
+      cmd: "/opt/galileo/bin/gpe-agent-comm send Galileo_Xfer_Service {{ galileo_site }}"
+
+- name: Remove answer file
+  ansible.builtin.file:
+      path: /tmp/galileo_comm_answer_file.txt
+      state: absent
+  when: comm_registration.rc == 0
