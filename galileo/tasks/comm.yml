@@ -4,14 +4,14 @@
       url: https://my.galileosuite.com/downloads/{{ comm_package }}
       dest: /tmp
       mode: '0644'
-  connection: local
-  run_once: true
+#   connection: local
+#   run_once: true
 
-- name: Copy file to remote server
-  ansible.builtin.copy:
-      src: "/tmp/{{ comm_package }}"
-      dest: /tmp
-      mode: '0644'
+# - name: Copy file to remote server
+#   ansible.builtin.copy:
+#       src: "/tmp/{{ comm_package }}"
+#       dest: /tmp
+#       mode: '0644'
 
 - name: Check if RPM is already installed
   ansible.builtin.shell:
