@@ -4,7 +4,8 @@
       url: https://my.galileosuite.com/downloads/{{ comm_package }}
       dest: /tmp
       mode: '0644'
-  ansible_python_interpreter: null
+  vars:
+      ansible_python_interpreter: null
   connection: local
   run_once: true
 
