@@ -24,5 +24,3 @@
     - name: Run comm and agent install playbook
       ansible.builtin.include_tasks:
         file: tasks/repo-comm.yml
-
-

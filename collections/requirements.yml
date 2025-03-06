@@ -1,4 +1,4 @@
 ---
 collections:
-# With just the collection name
-- ibm.power_aix
+  # With just the collection name
+  - ibm.power_aix

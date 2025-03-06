@@ -13,6 +13,3 @@
     state: present
     use_backend: "{{'dnf' | default(omit)}}"
   register: installed_rpms
-
-
-
