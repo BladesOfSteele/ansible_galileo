@@ -1,28 +1,28 @@
 ---
 - name: Download OS agent install file from Galileo
   ansible.builtin.get_url:
-      url: https://my.galileosuite.com/downloads/{{ agent_package }}
-      dest: /tmp
-      mode: '0644'
+    url: https://my.galileosuite.com/downloads/{{ agent_package }}
+    dest: /tmp
+    mode: "0644"
   vars:
-      ansible_python_interpreter: null
+    ansible_python_interpreter:
   connection: local
   run_once: true
 
 - name: Copy file to remote server
   ansible.builtin.copy:
-      src: "/tmp/{{ agent_package }}"
-      dest: /tmp
-      mode: '0644'
+    src: /tmp/{{ agent_package }}
+    dest: /tmp
+    mode: "0644"
 
 - name: Check if RPM is already installed
   ansible.builtin.shell:
-      cmd: "rpm  -q {{ (agent_package.split('.') | map('trim'))[:2] | join('.') }}"
+    cmd: rpm  -q {{ (agent_package.split('.') | map('trim'))[:2] | join('.') }}
   changed_when: false
   failed_when: false
   register: rpm_is_installed
 
 - name: Install {{ agent_package }}
   ansible.builtin.shell:
-      cmd: "rpm -Uvh /tmp/{{ agent_package }}"
+    cmd: rpm -Uvh /tmp/{{ agent_package }}
   when: rpm_is_installed.rc != 0

@@ -1,12 +1,11 @@
 ---
 # vars file for galileo
 galileo_repo_setup: true
-galileo_repo_url: "https://my.galileosuite.com/downloads/yum/{{ansible_system|lower}}"
+galileo_repo_url: https://my.galileosuite.com/downloads/yum/{{ansible_system|lower}}
 galileo_use_gpgkey: true
-galileo_repo_gpgkey: "https://my.galileosuite.com/downloads/yum/KEY.gpg"
-galileo_agent_list: ["net-tools","gpe-agent-comm","gpe-agent-{{ansible_system|lower}}"]
-galileo_repo_dir: "/opt/freeware/etc/yum.repos.d"
-
+galileo_repo_gpgkey: https://my.galileosuite.com/downloads/yum/KEY.gpg
+galileo_agent_list: [net-tools, gpe-agent-comm, "gpe-agent-{{ansible_system|lower}}"]
+galileo_repo_dir: /opt/freeware/etc/yum.repos.d
 
 #######################
 ## Comm Registration ##
