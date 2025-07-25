@@ -35,7 +35,7 @@
 
 - name: Validate registration succeeded by attempting a send
   ansible.builtin.shell:
-    cmd: /opt/galileo/bin/gpe-agent-comm send {{ galileo_service }}
+    cmd: /opt/galileo/bin/gpe-agent-comm send {{ galileo_service }} {{ galileo_site }}
 
 #- name: Remove answer file
 #  ansible.builtin.file:
