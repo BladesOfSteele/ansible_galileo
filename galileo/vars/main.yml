@@ -13,6 +13,7 @@ galileo_repo_dir: /opt/freeware/etc/yum.repos.d
 # These are the possible variables when registering a system with comm
 # **** galileo_site & galileo_token are required variables
 #galileo_service: defaults to 'Galileo_Xfer_Service' if not defined
+galileo_service: pge_service
 #galileo_url: defaults to 'https://xfer1.galileosuite.com,https://xfer2.galileosuite.com' if not defined
 #galileo_proxy: optional
 #galileo_proxy_port: optional
