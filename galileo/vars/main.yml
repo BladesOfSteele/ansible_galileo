@@ -4,7 +4,7 @@ galileo_repo_setup: true
 galileo_repo_url: https://my.galileosuite.com/downloads/yum/{{ansible_system|lower}}
 galileo_use_gpgkey: true
 galileo_repo_gpgkey: https://my.galileosuite.com/downloads/yum/KEY.gpg
-galileo_agent_list: [net-tools, gpe-agent-comm, "gpe-agent-{{ansible_system|lower}}]
+galileo_agent_list: [net-tools, gpe-agent-comm, "gpe-agent-{{ansible_system|lower}}.3-11-3]
 galileo_repo_dir: /opt/freeware/etc/yum.repos.d
 
 #######################
