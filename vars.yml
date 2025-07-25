@@ -7,5 +7,5 @@ galileo_token: eyJzZWMiOiI0MTMzNzZmNjlhMjAzMmEzY2IxMTQ1MDhiZWZlNzlmYiIsInR5cCI6I
 
 # These should only be used if you're going to specify a value, otherwise ansible
 # will omit these when creating and the rpm/system will handle getting a value
-galileo_uid: 301
-galileo_gid: 301
+# galileo_uid: 301
+# galileo_gid: 301
