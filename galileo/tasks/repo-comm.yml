@@ -37,8 +37,8 @@
   ansible.builtin.shell:
     cmd: /opt/galileo/bin/gpe-agent-comm send Galileo_Xfer_Service {{ galileo_site }}
 
-- name: Remove answer file
-  ansible.builtin.file:
-    path: /tmp/galileo_comm_answer_file.txt
-    state: absent
-  when: comm_registration.rc == 0
+#- name: Remove answer file
+#  ansible.builtin.file:
+#    path: /tmp/galileo_comm_answer_file.txt
+#    state: absent
+#  when: comm_registration.rc == 0
