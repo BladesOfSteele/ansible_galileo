@@ -2,10 +2,10 @@
 #######################
 ## Comm Registration ##
 #######################
-# galileo_site: PGE_PRD
+# galileo_site: < site name>
 # galileo_token: < token >
 # galileo_service: pge_service
-# galileo_url: https://pritappovals003.comp.pge.com:1443
+# galileo_url: < url: port>
 # These should only be used if you're going to specify a value, otherwise ansible
 # will omit these when creating and the rpm/system will handle getting a value
 # galileo_uid: 301
