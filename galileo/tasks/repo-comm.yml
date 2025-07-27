@@ -42,3 +42,10 @@
 #    path: /tmp/galileo_comm_answer_file.txt
 #    state: absent
 #  when: comm_registration.rc == 0
+
+# Remove repo to avoid being updated
+- name: Remove repository (and clean up left-over metadata)
+  ansible.builtin.yum_repository:
+    name: galileo
+    state: absent
+  notify: yum-clean-metadata
