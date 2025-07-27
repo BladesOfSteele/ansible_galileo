@@ -1,3 +1,4 @@
+
 ---
 - name: Configure Galileo Repository
   ansible.builtin.yum_repository:
@@ -48,4 +49,5 @@
   ansible.builtin.yum_repository:
     name: galileo
     state: absent
-  notify: yum-clean-metadata
+
+
