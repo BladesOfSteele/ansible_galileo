@@ -49,5 +49,3 @@
   ansible.builtin.yum_repository:
     name: galileo
     state: absent
-
-
