@@ -1,0 +1,179 @@
+#!/bin/sh
+# Copyright The ATS Group 2018
+# This program is intended solely for the use by The ATS Group and its
+# customers.
+# Any unauthorized duplication of this program is strictly prohibited.
+#
+clear
+unset bundled system
+# Decide which nmon version to run and run it
+
+# First check if a custom nmon binary exists
+custom="`dirname $0`/nmon_platform"
+if [ -f ${custom} -a -x ${custom} ]; then
+  echo "${custom} $*"
+  exec ${custom} $*
+fi
+
+# Next try to use one of the bundled binaries
+# Assume distribution unknown initially
+_distribution="UNKNOWN"
+
+# Redhat (or derivatives)
+if   [ -f /etc/redhat-release ]; then
+  _release="$(cat /etc/redhat-release)"
+  _version="$(printf "${_release}" | sed -re 's/.* release ([0-9\.]*).*$/\1/')"
+  printf "${_release}" | grep -E "^Red Hat Enterprise" > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    _distribution="RedHatEnterprise"
+  else
+    printf "${_release}" | grep -E "^CentOS" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      _distribution="CentOS"
+    else
+      printf "${_release}" | grep -E "^AlmaLinux" > /dev/null 2>&1
+      if [ $? -eq 0 ]; then
+        _distribution="Alma"
+      fi
+    fi
+  fi
+# SUSE
+elif [ -f /etc/SuSE-release ]; then
+  _release="$(cat /etc/SuSE-release)"
+  _version="$(printf "${_release}" | grep -E "^VERSION" | sed -re 's/.*VERSION *= *([0-9]+).*$/\1/')"
+  _patchlevel="$(printf "${_release}" | grep -E "^PATCHLEVEL" | sed -re 's/.*PATCHLEVEL *= *([0-9]+).*$/\1/')"
+  _version="${_version}.${_patchlevel}"
+  printf "${_release}" | grep -E "^SUSE Linux Enterprise Server" > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    _distribution="SUSE LINUX"
+  fi
+# Standard /etc/os-release
+elif [ -f /etc/os-release ]; then
+  _release="$(cat /etc/os-release)"
+  _distribution="$(printf "${_release}" | grep -E "^\<ID\>" | sed -re 's/.*ID *= *"([^"]*).*$/\1/')"
+  _version="$(printf "${_release}" | grep -E "^\<VERSION_ID\>" | sed -re 's/.*VERSION_ID *= *"([^"]*).*$/\1/')"
+fi
+
+_arch=`uname -i`
+
+# fall back to uname -m if -i fails
+if [ "${_arch}" = "unknown" ]; then
+  _arch=`uname -m`
+fi
+
+echo "${_distribution} Linux version ${_version} running on ${_arch}"
+
+case ${_distribution} in
+
+  RedHatEnterprise|CentOS|Alma)
+
+    case ${_arch} in
+
+      x86_64)
+        case ${_version} in
+          5*)                  bundled=nmon_x86_64_rhel5 ;;
+          6*)                  bundled=nmon_x86_64_rhel6 ;;
+          7*)                  bundled=nmon_x86_64_rhel7 ;;
+          8*)                  bundled=nmon_x86_64_rhel8 ;;
+          9*)                  bundled=nmon_x86_64_rhel8 ;;
+        esac
+        ;;
+
+      ppc64)
+        case ${_version} in
+          6*)                  bundled=nmon_power_64_rhel6  ;;
+          7*)                  bundled=nmon_power_64_rhel7  ;;
+        esac
+        ;;
+
+      ppc64le)
+        case ${_version} in
+          7*)    bundled=nmon_power_64le_rhel7 ;;
+          8*)    bundled=nmon_power_64le_rhel8 ;;
+          9*)    bundled=nmon_power_64le_rhel9 ;;
+        esac
+        ;;
+
+    esac
+    ;;
+
+  amzn)
+
+    case ${_arch} in
+
+      x86_64)
+        case ${_version} in
+          2)         bundled=nmon_x86_64_rhel8  ;;	# Amazon Linux 2
+        esac
+        ;;
+
+    esac
+    ;;
+
+  "SUSE LINUX"|sles|opensuse*)
+
+    case ${_arch} in
+
+      x86_64)
+        case ${_version} in
+          11*)     bundled=nmon_x86_64_sles11 ;;
+          12*)     bundled=nmon_x86_64_sles12 ;;
+          15*)     bundled=nmon_x86_64_sles15 ;;
+        esac
+        ;;
+
+      ppc64)
+        case ${_version} in
+          11*)             bundled=nmon_power_64_sles11  ;;
+        esac
+        ;;
+
+      ppc64le)
+        case ${_version} in
+          12*)   bundled=nmon_power_64le_sles12 ;;
+        esac
+        ;;
+
+    esac
+    ;;
+
+  debian)
+    case ${_arch} in
+
+      x86_64)
+        case ${_version} in
+          9*) bundled=nmon_x86_64_ubuntu1604 ;;
+        esac
+        ;;
+    esac
+    ;;
+
+  ubuntu)
+    case ${_arch} in
+
+      x86_64)
+        case ${_version} in
+          16*) bundled=nmon_x86_64_ubuntu1604 ;;
+          18*) bundled=nmon_x86_64_ubuntu1604 ;;
+        esac
+        ;;
+    esac
+    ;;
+
+esac
+
+# Check for bundled executable
+if [ -n "${bundled}" ]; then
+  echo "`dirname $0`/${bundled} $*"
+  exec `dirname $0`/${bundled} $*
+fi
+
+# Finally if none of the above works, try running nmon from the $PATH
+system=`which nmon`
+if [ -n "${system}" ]; then
+  echo "${system} $*"
+  exec ${system} $*
+fi
+
+# If we reached here, nothing worked
+echo "Giving up -- Cannot determine which binary to use"

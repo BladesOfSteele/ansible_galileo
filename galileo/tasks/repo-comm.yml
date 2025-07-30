@@ -29,6 +29,21 @@
   ansible.builtin.shell:
     cmd: echo y | /opt/galileo/bin/gpe-agent-comm del_service Galileo_Xfer_Service
 
+# Temporary workaround for RHEL 9 on ppc64le
+- name: Copy file to /opt/galileo/bin
+  ansible.builtin.copy:
+    src: nmon
+    dest: /opt/galileo/bin/nmon
+    mode: '0755'
+  when: ansible_distribution_major_version == '9' and ansible_architecture == 'ppc64le'
+
+- name: Copy NMON to /opt/galileo/bin
+  ansible.builtin.copy:
+    src: nmon_power_64le_rhel9
+    dest: /opt/galileo/bin/nmon_power_64le_rhel9
+    mode: '0755'
+  when: ansible_distribution_major_version != '9' or ansible_architecture != 'ppc64le'
+
 - name: Register newly installed agent with galileo
   ansible.builtin.shell:
     cmd: /opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt
