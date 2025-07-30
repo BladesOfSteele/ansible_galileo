@@ -42,7 +42,7 @@
     src: nmon_power_64le_rhel9
     dest: /opt/galileo/bin/nmon_power_64le_rhel9
     mode: '0755'
-  when: ansible_distribution_major_version != '9' or ansible_architecture != 'ppc64le'
+  when: ansible_distribution_major_version == '9' or ansible_architecture == 'ppc64le'
 
 - name: Register newly installed agent with galileo
   ansible.builtin.shell:
