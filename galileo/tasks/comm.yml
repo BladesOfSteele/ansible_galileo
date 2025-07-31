@@ -36,19 +36,28 @@
   ansible.builtin.template:
     dest: /tmp/galileo_comm_answer_file.txt
     src: galileo_comm_answer_file.txt.j2
+    mode: '0644'
 
 - name: Remove existing registration
-  ansible.builtin.shell:
-    cmd: echo y | /opt/galileo/bin/gpe-agent-comm del_service Galileo_Xfer_Service
+  ansible.builtin.shell: |
+    set -o pipefail
+    echo y | /opt/galileo/bin/gpe-agent-comm del_service {{ galileo_service }}
+  register: del_service_result
+  changed_when: del_service_result.rc == 0
 
 - name: Register newly installed agent with galileo
-  ansible.builtin.shell:
-    cmd: /opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt
+  ansible.builtin.shell: |
+    set -o pipefail
+    /opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt
   register: comm_registration
+  changed_when: comm_registration.rc == 0
 
 - name: Validate registration succeeded by attempting a send
-  ansible.builtin.shell:
-    cmd: /opt/galileo/bin/gpe-agent-comm send Galileo_Xfer_Service {{ galileo_site }}
+  ansible.builtin.shell: |
+    set -o pipefail
+    /opt/galileo/bin/gpe-agent-comm send {{ galileo_service }} {{ galileo_site }}
+  register: comm_send
+  changed_when: comm_send.rc == 0
 
 - name: Remove answer file
   ansible.builtin.file:

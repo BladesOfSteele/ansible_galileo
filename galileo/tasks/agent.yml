@@ -16,13 +16,15 @@
     mode: "0644"
 
 - name: Check if RPM is already installed
-  ansible.builtin.shell:
-    cmd: rpm  -q {{ (agent_package.split('.') | map('trim'))[:2] | join('.') }}
+  ansible.builtin.shell: |
+    set -o pipefail
+    rpm  -q {{ (agent_package.split('.') | map('trim'))[:2] | join('.') }}
   changed_when: false
   failed_when: false
   register: rpm_is_installed
 
 - name: Install {{ agent_package }}
-  ansible.builtin.shell:
-    cmd: rpm -Uvh /tmp/{{ agent_package }}
+  ansible.builtin.shell: |
+    set -o pipefail
+    rpm -Uvh /tmp/{{ agent_package }}
   when: rpm_is_installed.rc != 0

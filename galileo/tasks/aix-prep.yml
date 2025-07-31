@@ -13,7 +13,7 @@
     group: galileo
     create_home: false
 
-- name: Check if {{ aix_filesystem }} has at least {{ aix_filesystem_space }}GB of free space
+- name: Check for free space
   register: var_free_space
   ansible.builtin.shell:
     cmd: |
@@ -22,7 +22,7 @@
   changed_when: var_free_space.rc != 0
   failed_when: var_free_space.rc != 0
 
-- name: Extend if needed {{ aix_filesystem }}, currently has {{ var_free_space.stdout }}GB, needs {{ aix_filesystem_space }}GBB
+- name: Extend filesystem if needed
   when: var_free_space.stdout | int < aix_filesystem_space
   ibm.power_aix.filesystem:
     filesystem: "{{ aix_filesystem }}"
