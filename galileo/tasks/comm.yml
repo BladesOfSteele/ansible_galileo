@@ -36,7 +36,7 @@
   ansible.builtin.template:
     dest: /tmp/galileo_comm_answer_file.txt
     src: galileo_comm_answer_file.txt.j2
-    mode: '0644'
+    mode: "0644"
 
 - name: Remove existing registration
   ansible.builtin.shell: |
