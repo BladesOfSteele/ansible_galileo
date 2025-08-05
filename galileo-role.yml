@@ -1,7 +1,7 @@
 ---
 - name: Galileo agent install playbook
   hosts: all
-  gather_facts: false
+  gather_facts: true
 
   vars_files:
     - vars.yml
