@@ -1,4 +1,4 @@
 ---
 ansible_python_interpreter: /usr/bin/python3
 comm_package: gpe-agent-comm-2.9-2.aix.ppc.rpm
-agent_package: gpe-agent-aix-3.11-0.noperf.ppc.rpm
+agent_package: gpe-agent-aix-3.11-3.noperf.ppc.rpm
