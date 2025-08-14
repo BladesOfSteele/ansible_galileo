@@ -5,7 +5,7 @@
     dest: /tmp
     mode: "0644"
   vars:
-    ansible_python_interpreter: /usr/bin/python3
+    ansible_python_interpreter: " {{ '/usr/bin/python3' }}"
   connection: local
   # run_once: true
 
