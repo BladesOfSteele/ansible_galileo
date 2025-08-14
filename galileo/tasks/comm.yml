@@ -6,7 +6,7 @@
     url: https://my.galileosuite.com/downloads/{{ comm_package }}
     dest: /tmp
     mode: "0644"
-  connection: local
+  delegate_to: local
   # run_once: true
 
 - name: Copy file to remote server
