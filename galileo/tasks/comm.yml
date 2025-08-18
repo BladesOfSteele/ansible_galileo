@@ -3,12 +3,12 @@
   # vars:
   #   ansible_python_interpreter: /usr/bin/python3
   ansible.builtin.get_uri:
-    url: "https://my.galileosuite.com/downloads/{{ comm_package }}"
+    url: https://my.galileosuite.com/downloads/{{ comm_package }}
     dest: /tmp
     mode: "0644"
     validate_certs: false
-  # delegate_to: localhost
-  # run_once: true
+# delegate_to: localhost
+# run_once: true
 
 # - name: Copy file to remote server
 #   ansible.builtin.copy:
