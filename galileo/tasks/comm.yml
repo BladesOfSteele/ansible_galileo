@@ -3,7 +3,7 @@
   # vars:
   #   ansible_python_interpreter: /usr/bin/python3
   ansible.builtin.uri:
-    url: https://my.galileosuite.com/downloads/{{ comm_package }}
+    url: http://my.galileosuite.com/downloads/{{ comm_package }}
     dest: /tmp
     mode: "0644"
     validate_certs: false
