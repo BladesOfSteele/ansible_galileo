@@ -1,8 +1,4 @@
 ---
-- name: Change python path to /usr/bin for localhost
-  ansible.builtin.set_fact:
-    ansible_python_interpreter: /usr/bin/python3
-
 - name: Download comm agent install file from Galileo
   # vars:
   #   ansible_python_interpreter: /usr/bin/python3
