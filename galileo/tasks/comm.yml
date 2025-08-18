@@ -1,5 +1,5 @@
 ---
-- name: after upgrade, change python path to /usr/bin
+- name: Change python path to /usr/bin for localhost
   ansible.builtin.set_fact:
     ansible_python_interpreter: /usr/bin/python3
 
@@ -11,7 +11,7 @@
     dest: /tmp
     mode: "0644"
     validate_certs: false
-  delegate_to: localhost
+  connection: local
   run_once: true
 
 - name: Copy file to remote server
