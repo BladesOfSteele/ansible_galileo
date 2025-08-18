@@ -1,21 +1,20 @@
 ---
 - name: Download comm agent install file from Galileo
-  # vars:
-  #   ansible_python_interpreter: /usr/bin/python3
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   ansible.builtin.get_url:
     url: https://my.galileosuite.com/downloads/{{ comm_package }}
     dest: /tmp
     mode: "0644"
     validate_certs: false
-    use_proxy: false
-# delegate_to: localhost
-# run_once: true
+  delegate_to: localhost
+  run_once: true
 
-# - name: Copy file to remote server
-#   ansible.builtin.copy:
-#     src: /tmp/{{ comm_package }}
-#     dest: /tmp
-#     mode: "0644"
+- name: Copy file to remote server
+  ansible.builtin.copy:
+    src: /tmp/{{ comm_package }}
+    dest: /tmp
+    mode: "0644"
 
 - name: Check if RPM is already installed
   ansible.builtin.shell:
