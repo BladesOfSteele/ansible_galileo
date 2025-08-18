@@ -1,0 +1,13 @@
+---
+- name: Galileo agent install playbook
+  hosts: all
+  gather_facts: true
+
+  vars:
+    ansible_python_interpreter: /opt/freeware/bin/python3
+
+  vars_files:
+    - vars.yml
+
+  roles:
+    - galileo
