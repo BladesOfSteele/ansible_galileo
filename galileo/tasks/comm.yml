@@ -2,7 +2,7 @@
 - name: Download comm agent install file from Galileo
   # vars:
   #   ansible_python_interpreter: /usr/bin/python3
-  ansible.builtin.get_url:
+  ansible.builtin.get_uri:
     url: "https://my.galileosuite.com/downloads/{{ comm_package }}"
     dest: /tmp
     mode: "0644"
