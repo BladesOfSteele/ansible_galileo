@@ -6,17 +6,17 @@
       ansible.builtin.include_tasks:
         file: tasks/aix-prep.yml
 
-    - name: Change python path to /usr/bin for localhost
-      ansible.builtin.set_fact:
-        ansible_python_interpreter: /usr/bin/python3
+    # - name: Change python path to /usr/bin for localhost
+    #   ansible.builtin.set_fact:
+    #     ansible_python_interpreter: /usr/bin/python3
 
     - name: Run AIX comm install playbook
       ansible.builtin.include_tasks:
         file: tasks/comm.yml
 
-    - name: Change python path to /opt/freeware/bin/python3
-      ansible.builtin.set_fact:
-        ansible_python_interpreter: /opt/freeware/bin/python3
+    # - name: Change python path to /opt/freeware/bin/python3
+    #   ansible.builtin.set_fact:
+    #     ansible_python_interpreter: /opt/freeware/bin/python3
 
     - name: Run AIX agent install playbook
       ansible.builtin.include_tasks:
