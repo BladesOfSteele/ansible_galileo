@@ -17,52 +17,62 @@
     dest: /tmp
     mode: "0644"
 
-- name: Check if RPM is already installed
-  ansible.builtin.shell:
-    cmd: rpm  -q gpe-agent-comm
-  changed_when: false
-  failed_when: false
-  register: rpm_is_installed
+# - name: Check if RPM is already installed
+#   ansible.builtin.shell:
+#     cmd: rpm  -q gpe-agent-comm
+#   changed_when: false
+#   failed_when: false
+#   register: rpm_is_installed
 
 - name: Install {{ comm_package }}
   ansible.builtin.shell:
     cmd: rpm -Uvh /tmp/{{ comm_package }}
   when: rpm_is_installed.rc != 0
 
-- name: Enable proxy Auth if user and password were provided
-  ansible.builtin.set_fact:
-    galileo_proxy_auth_required: "{% if galileo_proxy_user is defined and galileo_proxy_password is defined %}true{% endif %}"
-  when: galileo_proxy is defined and galileo_proxy_port is defined
+- name: Run gpe-agent communication check
+  ansible.builtin.command:
+    cmd: /opt/galileo/bin/gpe-agent-comm send pge_service PGE_PRD
+  register: gpe_agent_comm
+  changed_when: false
+  failed_when: false
 
-- name: Lay down galileo answer file
-  ansible.builtin.template:
-    dest: /tmp/galileo_comm_answer_file.txt
-    src: galileo_comm_answer_file.txt.j2
-    mode: "0644"
+- name: Register agent when comm check fails
+  when: gpe_agent_comm.rc != 0
+  block:
+    - name: Enable proxy Auth if user and password were provided
+      ansible.builtin.set_fact:
+        galileo_proxy_auth_required: "{% if galileo_proxy_user is defined and galileo_proxy_password is defined %}true{% endif %}"
+      when: galileo_proxy is defined and galileo_proxy_port is defined
 
-- name: Remove existing registration
-  ansible.builtin.shell: |
-    set -o pipefail
-    echo y | /opt/galileo/bin/gpe-agent-comm del_service {{ galileo_service }}
-  register: del_service_result
-  changed_when: del_service_result.rc == 0
+    - name: Lay down galileo answer file
+      ansible.builtin.template:
+        dest: /tmp/galileo_comm_answer_file.txt
+        src: galileo_comm_answer_file.txt.j2
+        mode: "0644"
 
-- name: Register newly installed agent with galileo
-  ansible.builtin.shell: |
-    set -o pipefail
-    /opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt
-  register: comm_registration
-  changed_when: comm_registration.rc == 0
+    - name: Remove existing registration
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo y | /opt/galileo/bin/gpe-agent-comm del_service {{ galileo_service }}
+      register: del_service_result
+      changed_when: del_service_result.rc == 0
 
-- name: Validate registration succeeded by attempting a send
-  ansible.builtin.shell: |
-    set -o pipefail
-    /opt/galileo/bin/gpe-agent-comm send {{ galileo_service }} {{ galileo_site }}
-  register: comm_send
-  changed_when: comm_send.rc == 0
+    - name: Register newly installed agent with galileo
+      ansible.builtin.shell: |
+        set -o pipefail
+        /opt/galileo/bin/gpe-agent-comm add_service --file /tmp/galileo_comm_answer_file.txt
+      register: comm_registration
+      changed_when: comm_registration.rc == 0
 
-- name: Remove answer file
-  ansible.builtin.file:
-    path: /tmp/galileo_comm_answer_file.txt
-    state: absent
-  when: comm_registration.rc == 0
+    - name: Validate registration succeeded by attempting a send
+      ansible.builtin.shell: |
+        set -o pipefail
+        /opt/galileo/bin/gpe-agent-comm send {{ galileo_service }} {{ galileo_site }}
+      register: comm_send
+      changed_when: comm_send.rc == 0
+
+    - name: Remove answer file
+      ansible.builtin.file:
+        path: /tmp/galileo_comm_answer_file.txt
+        state: absent
+      when: comm_registration.rc == 0
