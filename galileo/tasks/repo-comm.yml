@@ -10,7 +10,7 @@
 - name: Try to install using yum
   ansible.builtin.yum:
     name: "{{ galileo_agent_list }}"
-    state: present
+    state: latest
     use_backend: "{{ 'dnf' | default(omit) }}"
   register: installed_rpms
 
