@@ -75,8 +75,8 @@
         state: absent
       when: comm_registration.rc == 0
 
-# Remove repo to avoid being updated during an update all
-- name: Remove repository (and clean up left-over metadata)
-  ansible.builtin.yum_repository:
-    name: galileo
-    state: absent
+# # Remove repo to avoid being updated during an update all
+# - name: Remove repository (and clean up left-over metadata)
+#   ansible.builtin.yum_repository:
+#     name: galileo
+#     state: absent
