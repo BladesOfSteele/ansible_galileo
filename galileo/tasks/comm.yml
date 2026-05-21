@@ -28,6 +28,9 @@
   ansible.builtin.shell:
     cmd: rpm -Uvh /tmp/{{ comm_package }}
   # when: rpm_is_installed.rc != 0
+  register: rpm_result
+  failed_when: rpm_result.rc != 0 and 'already installed' not in rpm_result.stderr
+  changed_when: "'already installed' not in rpm_result.stderr"
 
 - name: Run gpe-agent communication check
   ansible.builtin.command:
