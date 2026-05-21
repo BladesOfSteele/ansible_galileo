@@ -27,7 +27,7 @@
 - name: Install {{ comm_package }}
   ansible.builtin.shell:
     cmd: rpm -Uvh /tmp/{{ comm_package }}
-  when: rpm_is_installed.rc != 0
+  # when: rpm_is_installed.rc != 0
 
 - name: Run gpe-agent communication check
   ansible.builtin.command:
