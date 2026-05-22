@@ -13,8 +13,14 @@
     group: galileo
     create_home: false
 
+- name: Check if /etc/cron.allow exists
+  ansible.builtin.stat:
+    path: /etc/cron.allow
+  register: cron_allow_file
+
 - name: If necessary, add galileo to /etc/cron.allow
   ansible.builtin.lineinfile:
     path: /etc/cron.allow
     line: galileo
     state: present
+  when: cron_allow_file.stat.exists
