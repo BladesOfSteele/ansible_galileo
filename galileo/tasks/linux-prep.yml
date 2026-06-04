@@ -24,3 +24,8 @@
     line: galileo
     state: present
   when: cron_allow_file.stat.exists
+
+- name: Set the Galileo password to never expire
+  ansible.builtin.user:
+    name: galileo
+    password_expire_max: -1
